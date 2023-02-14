@@ -1,10 +1,12 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <!-- Starts Head Section -->
 <head>
     <link rel="stylesheet"
-          href="/css/styles.css">
-    <link rel="icon" type="image/x-icon" href="/images/free-30-instagram-stories-icons23_122570.png">
+          href="{% static 'css/styles.css'%}" >
+    <link rel="icon" type="image/x-icon" href="{% static '/images/free-30-instagram-stories-icons23_122570.png' %}">
     <title>Petstagram</title>
 </head>
 <!-- End Head Section -->
@@ -19,10 +21,11 @@
             <div class="logo">
                 <!-- Link to Home Page -->
                 <a href="#">
-                    <img width="50px" src="/images/free-30-instagram-stories-icons23_122570.png" alt="img1">
+                    <img width="50px" src="{% static "/images/free-30-instagram-stories-icons23_122570.png" %}" alt="img1">
                 </a>
+
                 <!-- Link to Home Page -->
-                <a class="home" href="#">
+                <a class="home" href="{% url 'index' %}">
                     <i>Petstagram</i>
                 </a>
             </div>
@@ -30,34 +33,37 @@
             <div class="nav-links">
                 <ul class="nav-group">
                     <li class="nav-item">
+
                         <!-- Link to Add Pet Page -->
-                        <a href="#">
+                        <a href="{% url 'add_pet' %}">
                             <i>Add Pet</i>
                         </a>
                     </li>
                     <li class="nav-item">
+
                         <!-- Link to Add Photo Page -->
-                        <a href="#">
+                        <a href="{% url 'add_photo' %}">
                             <i>Add Photo</i>
                         </a>
                     </li>
                     <li class="nav-item">
+
                         <!-- Link to Login Page -->
-                        <a href="#">
+                        <a href="{% url 'login_user' %}">
                             <i>Login</i>
                         </a>
                     </li>
-
                     <li class="nav-item">
+
                         <!-- Link to Register Page -->
-                        <a href="#">
+                        <a href="{% url 'register_user' %}">
                             <i>Register</i>
                         </a>
                     </li>
-
                     <li class="nav-item">
-                        <!-- Link to Profile Details Page -->
-                        <a href="#">
+
+                        <!-- Link to Profile Page -->
+                        <a href="{% url 'detail_user' pk=1 %}">
                             <i>Profile</i>
                         </a>
                     </li>
@@ -70,28 +76,13 @@
 
 <!-- Starts Main Section -->
 <main>
-    <!-- 404 page -->
-    <div class="not-found-img">
-        <img src="/images/zillow-404-page-5f3ed6a6abaa5.gif" alt="404 not found gif">
-    </div>
+    {% block main %}
 
-    <div class="not-found">
-        <h1>
-            Uh oh,<br> something broke.
-        </h1>
-
-        <h3>Error 404 - page not found.</h3>
-        <!-- Link to Home Page -->
-        <a href="#">
-            <button>Return to Petstagram</button>
-        </a>
-    </div>
-    <!-- End 404 page -->
-
+    {% endblock %}
 </main>
 <!-- End Main Section -->
 
-<!-- Starts Footer Section -->
+<!-- Start Footer Section -->
 <div class="footer">
 		<span class="footer-section">
 			© 2022 SOFTUNI WORKSHOP FOR PYTHON WEB MODULE
