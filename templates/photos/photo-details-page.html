@@ -34,7 +34,9 @@
                             <br>
 
                             <!-- IF the photo has location -->
-                            <span>Bansko, Bulgaria</span>
+                            {% if photo.location %}
+                            <span>{{ photo.location }}</span>
+                            {% endif %}
 
                             <!-- IF the viewer is the creator of the photo -->
                             <div class="edit-delete-btns">
@@ -75,9 +77,10 @@
                             <span class="heart">
 
                                     <!-- Link to Like Path -->
-									<a href="#">
+									<a href="{% url 'like' photo_id=photo.id %}">
 
 										<!-- IF user has liked the photo -->
+                                        {% if photo.like_count %}
                                         <svg style="color: red"
                                              xmlns="http://www.w3.org/2000/svg"
                                              width="24"
@@ -92,6 +95,7 @@
                                                   fill="red">
                                             </path>
                                         </svg>
+                                        {% else %}
 
                                         <!-- IF NOT user has liked the photo -->
                                         <svg aria-label="Like"
@@ -116,6 +120,7 @@
                                                     48 25 48 17.6c0-8-6-14.5-13.4-14.5z">
                                         </path>
                                         </svg>
+                                        {% endif %}
 								    </a>
                             </span>
                             <!-- End Like Button -->
@@ -140,30 +145,27 @@
                     <!-- End Like and Share Buttons Section -->
 
                     <!-- Number of Likes for the Photo -->
-                    <p class="likes">203 likes</p>
+                    <p class="likes">{{ photo.like_count }} likes</p>
 
                     <!-- Start Tagged Pets Section-->
                     <!-- Link to First Tagged Pet Details Page -->
-                    <a href="{% url 'details_pet' username='username' pet_name='pet_name' %}">
+                    {% for taged in photo.tagged_pets.all %}
+                    <a href="{% url 'details_pet' username='username' pet_name=taged.name %}">
                         <p class="message">
-                            <b>Sasho</b>
+                            <b>{{ taged.name }}</b>
                         </p>
                     </a>
-                    <!-- Link to Second Tagged Pet Details Page -->
-                    <a href="{% url 'details_pet' username='username' pet_name='pet_name' %}">
-                        <p class="message">
-                            <b>Some other fish</b>
-                        </p>
-                    </a>
+                    {% endfor %}
                     <!-- End Tagged Pets Section-->
 
                     <!-- Photo description -->
-                    <p class="pet-details">This is my pet</p>
+                    <p class="pet-details">{{ photo.description }}</p>
 
                     <!-- Date of Publication or edit of the Photo -->
-                    <h5 class="postTime">19/09/2022</h5>
+                    <h5 class="postTime">{{ photo.date_of_publication }}</h5>
 
                     <!-- Start Comments Section -->
+                {% for comment in comments %}
                     <div class="comments">
                         <div class="top">
                             <div class="userDetails">
@@ -181,13 +183,14 @@
                                         <!-- User First and/or Last Name or username-->
                                         <a href="{% url 'detail_user' pk=1 %}">Steven Ivanov</a>
                                         <!-- User Comment -->
-                                        - OMG where can i get one
+                                        {{ comment.text }}
                                     </p>
                                 </div>
-                                <span>Sept. 20, 2022, 5:02 p.m.</span>
+                                <span>{{ comment.date_of_publication }}</span>
                             </div>
                         </div>
                     </div>
+                {% endfor %}
                     <!-- End Comments Section -->
                 </div>
 
