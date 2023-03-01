@@ -42,13 +42,13 @@
                             <div class="edit-delete-btns">
 
                                 <!-- Link to Edit Pet Photo Page -->
-                                <a href="{% url 'edit_pet' username='username' pet_name='pet_name' %}">
+                                <a href="{% url 'edit_photo' pk=pk %}">
                                     <img class="edit-img" src="{% static '/images/edit-pen-icon-6.jpg' %}"
                                          alt="edit button">
                                 </a>
 
                                 <!-- Link to Delete Pet Photo Page -->
-                                <a href="{% url 'delete_pet' username='username' pet_name='pet_name' %}">
+                                <a href="{% url 'delete_photo' pk=pk %}">
                                     <img class="bin-img" src="{% static '/images/icon-remove-22.jpg' %}" alt="bin button">
                                 </a>
                             </div>
@@ -63,7 +63,8 @@
                 <!-- Start Pet Photo -->
                 <div class="imgBx" id="place the id of the photo here">
                     <!-- Pet Photo -->
-                    <img src="{% static '/images/axolotl.jpeg' %}" alt="post" class="cover">
+                    <img src="/media/{{ photo.photo }}" alt="post" class="cover">
+{#                    src="/media_files/media_files/photo_app/puppy-2785074__340_rcVRYhc.jpg"#}
                 </div>
                 <!-- End Pet Photo -->
 
@@ -150,7 +151,7 @@
                     <!-- Start Tagged Pets Section-->
                     <!-- Link to First Tagged Pet Details Page -->
                     {% for taged in photo.tagged_pets.all %}
-                    <a href="{% url 'details_pet' username='username' pet_name=taged.name %}">
+                    <a href="{% url 'details_pet' username='username' pet_slug=taged.slug %}">
                         <p class="message">
                             <b>{{ taged.name }}</b>
                         </p>
@@ -203,12 +204,10 @@
                     </div>
 
                     <!-- Start Add Comments Form -->
-                    <form method="post" action="#">
-                        <label for="id_body">Body:</label>
-                        <textarea name="body" cols="40" rows="10" placeholder="Add comment..." maxlength="300"
-                                  required="" id="id_body"></textarea>
-                        <!-- Post Comments Button -->
+                    <form method="post" action="{% url 'comment' pk=photo.id %}">
+                        {{ form }}
                         <button type="submit">Post</button>
+                        {% csrf_token %}
                     </form>
                     <!-- End Add Comments Form -->
 

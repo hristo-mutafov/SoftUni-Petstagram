@@ -7,6 +7,9 @@ from DjangoPetstagram.photos.validators import check_file_size_5mb
 
 
 class Photo(StrRepresentationMixin, models.Model):
+    class Meta:
+        ordering = ('photo', )
+
     repr_columns = ('id', 'description')
     MAX_DESC_LEN = 300
     MIN_DESC_LEN = 10

@@ -4,13 +4,15 @@
 
     <!-- Starts Edit Photo Section -->
     <div class="edit-delete edit-photo">
-        <h2>Edit photo</h2>
+        <h2>Delete photo</h2>
 
         <!-- Starts Edit Photo Form -->
-        <form method="post" enctype="multipart/form-data" action="{% url 'edit_photo' pk=pk %}">
+
+        <form method="post" action="{% url 'delete_photo' pk=pk %}">
             {{ form.as_p }}
-            <button class="edit-btn" type="submit">Edit Photo</button>
+            <button style="background-color: red" class="edit-btn" type="submit">Delete Photo</button>
             {% csrf_token %}
+
         </form>
         <!-- End Edit Photo Form -->
 
