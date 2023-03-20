@@ -1,9 +1,11 @@
-from django.core.validators import MinValueValidator, MinLengthValidator
+from django.contrib.auth import get_user_model
+from django.core.validators import MinLengthValidator
 from django.db import models
 from django.utils.text import slugify
 
 from DjangoPetstagram.core.model_mixins import StrRepresentationMixin
 
+UserModel = get_user_model()
 
 class Pet(StrRepresentationMixin, models.Model):
     repr_columns = ('name',)
@@ -19,7 +21,8 @@ class Pet(StrRepresentationMixin, models.Model):
         null=False,
         blank=False
     )
-    date_of_bird = models.DateField(
+
+    date_of_birth = models.DateField(
         null=True,
         blank=True
     )
@@ -29,10 +32,18 @@ class Pet(StrRepresentationMixin, models.Model):
         blank=True
     )
 
+    user = models.ForeignKey(
+        UserModel,
+        on_delete=models.RESTRICT
+    )
+
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs) # Create the obj
+        super().save(*args, **kwargs)
 
         if not self.slug:
-            self.slug = slugify(f'{self.id}-{self.name}') # Use the attributes of the created obj
+            self.slug = slugify(f'{self.id}-{self.name}')
 
-        super().save(*args, **kwargs)  # Save the changes
+        if not self.user:
+            self.user = self.request.user
+
+        super().save(*args, **kwargs)

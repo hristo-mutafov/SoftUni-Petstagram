@@ -1,21 +1,33 @@
 {% extends 'base/base.html' %}
-
+{% load placeholders %}
 {% block main %}
 
-    <!-- Start Add Pet Section-->
+
     <div class="edit-delete edit-photo">
         <h2>Add pet</h2>
 
-        <!-- Start Add Pet Form -->
 
         <form method="post" action="{% url 'add_pet' %}">
-            {{ form.as_p }}
+            <div style="margin-bottom: 5px"  class="label-input">
+                 <label for="last name">Name: </label>
+                {{ form.name | placeholder:'Name' }}
+            </div>
+            <div style="margin-bottom: 5px" class="label-input">
+                <label for="last name">Date of birth: </label>
+                {{ form.date_of_birth | placeholder:'mm/dd/yyyy' }}
+            </div>
+            <div class="label-input">
+                <label for="last name">Personal Photo: </label>
+                {{ form.personal_photo | placeholder:'Link to image' }}
+            </div>
+
+
             {% csrf_token %}
             <button class="add-btn" type="submit">Add Pet</button>
         </form>
-        <!-- End Add Pet Form -->
+
 
     </div>
-    <!-- End Add Pet Section -->
+
 
 {% endblock %}

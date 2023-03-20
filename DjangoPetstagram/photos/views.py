@@ -1,63 +1,50 @@
-from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.views import generic as views
 
 from DjangoPetstagram.common.forms import CommentForm
 from DjangoPetstagram.common.utils import get_likes
-from DjangoPetstagram.photos.forms import AddPhotoForm, EditPhotoForm, DeletePhotoForm
+from DjangoPetstagram.core.views_mixins import IsOwnerMixin, OwnerRequiredMixin
 from DjangoPetstagram.photos.models import Photo
-from DjangoPetstagram.photos.utils import get_photo_by_pk
 
 
-def add_photo(request):
-    if request.method == 'GET':
-        form = AddPhotoForm()
-    else:
-        form = AddPhotoForm(request.POST, request.FILES)
-        if form.is_valid():
-            photo = form.save()
-            return redirect('details_photo', pk=photo.pk)
+class AddPhoto(LoginRequiredMixin, views.CreateView):
+    model = Photo
+    template_name = 'photos/photo-add-page.html'
+    fields = ('photo', 'description', 'location', 'tagged_pets')
 
-    context = {
-        'form': form
-    }
-    return render(request, 'photos/photo-add-page.html', context)
+    def form_valid(self, form):
+        photo = form.save(commit=False)
+        photo.user = self.request.user
+        form.save()
+        return redirect('details_photo', pk=photo.id)
 
-def details_photo(request, pk):
-    photo = get_likes(get_photo_by_pk(pk))
-    form = CommentForm()
-    context = {
-        'photo':  photo,
-        'comments': photo.photocomment_set.all(),
-        'pk': pk,
-        'form': form
-    }
-    return render(request, 'photos/photo-details-page.html', context)
 
-def edit_photo(request, pk):
-    pet = Photo.objects.filter(id=pk).get()
-    if request.method == 'GET':
-        form = EditPhotoForm(instance=pet)
-    else:
-        form = EditPhotoForm(request.POST, request.FILES, instance=pet)
-        if form.is_valid():
-            photo = form.save()
-            return redirect('details_photo', pk=photo.pk)
-    context = {
-        'form': form,
-        'pk': pk
-    }
-    return render(request, 'photos/photo-edit-page.html', context)
 
-def delete_photo(request, pk):
-    pet = Photo.objects.filter(id=pk).get()
-    if request.method == 'GET':
-        form = DeletePhotoForm(instance=pet)
-    else:
-        form = DeletePhotoForm(request.POST, instance=pet)
-        if form.is_valid():
-            form.save()
-            return redirect('index')
-    context = {
-        'form': form,
-        'pk': pk
-    }
-    return render(request, 'photos/photo-delete-page.html', context)
+class DetailsPhoto(IsOwnerMixin, views.DetailView):
+    template_name = 'photos/photo-details-page.html'
+    model = Photo
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['is_owner'] = self.is_owner()
+        data['photo'] = get_likes(data['photo'])
+        data['form'] = CommentForm()
+        return data
+
+
+class EditPhoto(LoginRequiredMixin, OwnerRequiredMixin, views.UpdateView):
+    model = Photo
+    template_name = 'photos/photo-edit-page.html'
+    fields = ('photo', 'description', 'location', 'tagged_pets')
+
+
+    def get_success_url(self):
+        return reverse_lazy('details_photo', kwargs={'pk': self.object.pk})
+
+
+class DeletePhoto(LoginRequiredMixin, OwnerRequiredMixin, views.DeleteView):
+    model = Photo
+    template_name = 'photos/photo-delete-page.html'
+    success_url = reverse_lazy('index')

@@ -1,14 +1,16 @@
-from django.core.validators import MinLengthValidator
+from django.contrib.auth import get_user_model
+from django.core import validators
 from django.db import models
 
 from DjangoPetstagram.core.model_mixins import StrRepresentationMixin
 from DjangoPetstagram.pets.models import Pet
 from DjangoPetstagram.photos.validators import check_file_size_5mb
 
+UserModel = get_user_model()
 
 class Photo(StrRepresentationMixin, models.Model):
     class Meta:
-        ordering = ('photo', )
+        ordering = ('-date_of_publication', )
 
     repr_columns = ('id', 'description')
     MAX_DESC_LEN = 300
@@ -25,7 +27,7 @@ class Photo(StrRepresentationMixin, models.Model):
         max_length=MAX_DESC_LEN,
         blank=True,
         null=True,
-        validators=(MinLengthValidator(MIN_DESC_LEN),)
+        validators=(validators.MinLengthValidator(MIN_DESC_LEN),)
     )
 
     location = models.CharField(
@@ -34,8 +36,8 @@ class Photo(StrRepresentationMixin, models.Model):
         blank=False
     )
 
-    date_of_publication = models.DateField(
-        auto_now=True,
+    date_of_publication = models.DateTimeField(
+        auto_now_add=True,
         null=False,
         blank=True
     )
@@ -43,4 +45,9 @@ class Photo(StrRepresentationMixin, models.Model):
     tagged_pets = models.ManyToManyField(
         Pet,
         blank=True
+    )
+
+    user = models.ForeignKey(
+        UserModel,
+        on_delete=models.RESTRICT
     )

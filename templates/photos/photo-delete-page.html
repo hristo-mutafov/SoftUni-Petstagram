@@ -2,20 +2,19 @@
 
 {% block main %}
 
-    <!-- Starts Edit Photo Section -->
+
     <div class="edit-delete edit-photo">
         <h2>Delete photo</h2>
 
-        <!-- Starts Edit Photo Form -->
 
-        <form method="post" action="{% url 'delete_photo' pk=pk %}">
-            {{ form.as_p }}
+
+        <form method="post" action="{% url 'delete_photo' pk=object.id %}">
             <button style="background-color: red" class="edit-btn" type="submit">Delete Photo</button>
             {% csrf_token %}
 
         </form>
-        <!-- End Edit Photo Form -->
+
 
     </div>
-    <!-- End Edit Photo Section -->
+
 {% endblock %}

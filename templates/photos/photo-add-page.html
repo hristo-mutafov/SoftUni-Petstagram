@@ -1,17 +1,33 @@
 {% extends 'base/base.html' %}
-
 {% block main %}
-    <!-- Start Add Photo Section -->
+
     <div class="edit-delete edit-photo">
         <h2>Add photo</h2>
-        <!-- Start Add Photo Form -->
+
 
         <form method="post" enctype="multipart/form-data" action="{% url 'add_photo' %}">
-            {{ form.as_p }}
+
+            <div style="margin-bottom: 5px"  class="label-input">
+                 <label for="last name">Photo: </label>
+                {{ form.photo }}
+            </div>
+            <div style="margin-bottom: 5px" class="label-input">
+                <label for="last name">Description: </label>
+                {{ form.description }}
+            </div>
+            <div style="margin-bottom: 5px" class="label-input">
+                <label for="last name">Location: </label>
+                {{ form.location }}
+            </div>
+            <div class="label-input">
+                <label for="last name">Tagged_pets: </label>
+                {{ form.tagged_pets }}
+            </div>
+
             <button class="add-btn" type="submit">Add Photo</button>
             {% csrf_token %}
         </form>
-        <!-- End Add Photo Form -->
+
     </div>
-    <!-- End Add Photo Section -->
+
 {% endblock %}

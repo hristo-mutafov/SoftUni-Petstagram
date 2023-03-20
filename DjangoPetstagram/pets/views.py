@@ -1,67 +1,49 @@
-from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.views import generic as views
 
-from DjangoPetstagram.pets.forms import AddPetForm, EditPetForm, DeletePetForm
+from DjangoPetstagram.common.forms import CommentForm
+from DjangoPetstagram.common.models import PhotoComment
+from DjangoPetstagram.core.views_mixins import IsOwnerMixin, OwnerRequiredMixin
 from DjangoPetstagram.pets.models import Pet
-from DjangoPetstagram.pets.utils import set_photo_count, get_pet_by_slug
 
 
-def add_pet(request):
-    if request.method == 'GET':
-        form = AddPetForm()
-    else:
-        form = AddPetForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('detail_user', pk=1)
-
-    context = {
-        'form': form,
-    }
-    return render(request, 'pets/pet-add-page.html', context)
-
-def delete_pet(request, username, pet_slug):
-    the_pet = Pet.objects.filter(slug=pet_slug).get()
-    if request.method == 'GET':
-        form = DeletePetForm(instance=the_pet)
-    else:
-        form = DeletePetForm(request.POST, instance=the_pet)
-        if form.is_valid():
-            form.save()
-            return redirect('detail_user', pk=1)
-
-    context = {
-        'form': form,
-        'username': username,
-        'pet_slug': pet_slug
-    }
-    return render(request, 'pets/pet-delete-page.html', context)
+class AddPet(LoginRequiredMixin, views.CreateView):
+    model = Pet
+    template_name = 'pets/pet-add-page.html'
+    fields = ('name', 'date_of_birth', 'personal_photo')
 
 
-def details_pet(request, username, pet_slug):
-    #TODO add username when auth
-    pet = get_pet_by_slug(slug=pet_slug)
-    context = {
-        'pet': pet,
-        'photos_count': len(set_photo_count(pet)),
-        'pet_photos': set_photo_count(pet)
-    }
-    return render(request, 'pets/pet-details-page.html', context)
+    def form_valid(self, form):
+        pet = form.save(commit=False)
+        pet.user = self.request.user
+        pet.save()
+        return redirect('details_pet', slug=pet.slug, username=self.request.user.username)
 
 
-def edit_pet(request, username, pet_slug):
-    the_pet = Pet.objects.filter(slug=pet_slug).get()
-    if request.method == 'GET':
-        form = EditPetForm(instance=the_pet)
-    else:
-        form = EditPetForm(request.POST, instance=the_pet)
-        if form.is_valid():
-            form.save()
-            return redirect('details_pet', username=username, pet_slug=pet_slug)
+class DeletePet(LoginRequiredMixin, OwnerRequiredMixin, views.DeleteView):
+    model = Pet
+    template_name = 'pets/pet-delete-page.html'
 
-    context = {
-        'form': form,
-        'username': username,
-        'slug': pet_slug
-    }
+    def get_success_url(self):
+        return reverse_lazy('detail_user', kwargs={'pk': self.request.user.id})
 
-    return render(request, 'pets/pet-edit-page.html', context)
+
+class DetailPet(IsOwnerMixin, views.DetailView):
+    model = Pet
+    template_name = 'pets/pet-details-page.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['is_owner'] = self.is_owner()
+        data['form'] = CommentForm()
+        return data
+
+class EditPet(LoginRequiredMixin, OwnerRequiredMixin, views.UpdateView):
+    model = Pet
+    template_name = 'pets/pet-edit-page.html'
+    fields = ('name', 'date_of_birth', 'personal_photo')
+
+    def get_success_url(self):
+        return reverse_lazy('details_pet', kwargs={'username': self.request.user.username, 'slug': self.object.slug})

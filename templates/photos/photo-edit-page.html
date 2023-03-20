@@ -2,18 +2,38 @@
 
 {% block main %}
 
-    <!-- Starts Edit Photo Section -->
+
     <div class="edit-delete edit-photo">
         <h2>Edit photo</h2>
 
-        <!-- Starts Edit Photo Form -->
-        <form method="post" enctype="multipart/form-data" action="{% url 'edit_photo' pk=pk %}">
-            {{ form.as_p }}
+        <form method="post" enctype="multipart/form-data" action="{% url 'edit_photo' pk=photo.id %}">
+            <div style="margin-bottom: 5px" class="label-input">
+                <label for="id_photo">Photo: </label>
+                <input type="file" name="photo" accept="image/*" id="id_photo">
+            </div>
+            <div style="margin-bottom: 5px" class="label-input">
+                <label for="id_description">Description: </label>
+                {{ form.description }}
+            </div>
+            <div style="margin: 5px 0px" class="label-input">
+                <label for="Location"></label>
+                {{ form.description.errors }}
+            </div>
+            <div style="margin-bottom: 5px" class="label-input">
+                <label for="id_location">Location: </label>
+                {{ form.location }}
+            </div>
+
+            <div class="label-input">
+                <label for="id_tagged_pets">Tagged_pets: </label>
+                {{ form.tagged_pets }}
+            </div>
+
             <button class="edit-btn" type="submit">Edit Photo</button>
             {% csrf_token %}
         </form>
-        <!-- End Edit Photo Form -->
+
 
     </div>
-    <!-- End Edit Photo Section -->
+
 {% endblock %}

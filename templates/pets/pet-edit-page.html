@@ -1,17 +1,33 @@
 {% extends 'base/base.html' %}
-
+{% load placeholders %}
 {% block main %}
-    <!-- Start Edit Pet Section -->
     <div class="edit-delete edit-photo">
         <h2>Edit Pet</h2>
-        <!-- Start Edit Pet From -->
-        <form method="post" action="{% url 'edit_pet' username=username pet_slug=slug %}">
-            {{ form.as_p }}
+        <form method="post" action="{% url 'edit_pet' username=request.user.username slug=object.slug %}">
+            <div style="margin-bottom: 5px"  class="label-input">
+                 <label for="id_name">Name: </label>
+                {{ form.name | placeholder:'Name' }}
+            </div>
+            <div style="margin: 5px 0px"  class="label-input">
+                 <label for="name"></label>
+                {{ form.name.errors }}
+            </div>
+            <div style="margin-bottom: 5px" class="label-input">
+                <label for="id_date_of_birth">Date of birth: </label>
+                {{ form.date_of_birth | placeholder:'mm/dd/yyyy' }}
+            </div>
+            <div class="label-input">
+                <label for="id_personal_photo">Personal Photo: </label>
+                {{ form.personal_photo | placeholder:'Link to image' }}
+            </div>
+            <div style="margin: 5px 0px" class="label-input">
+                <label for="personal_photo"></label>
+                {{ form.personal_photo.errors }}
+            </div>
+
             <button class="edit-btn" type="submit">Edit</button>
             {% csrf_token %}
         </form>
-        <!-- End Edit Pet Form -->
 
     </div>
-    <!-- End Edit Pet Section -->
 {% endblock %}

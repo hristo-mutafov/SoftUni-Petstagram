@@ -1,61 +1,54 @@
 {% extends 'base/base.html' %}
-
+{% load placeholders %}
 {% block main %}
-    <!-- Start Edit Profile Section -->
     <div class="edit-delete">
         <h2>Edit Profile</h2>
-        <!-- Start Edit Profile From -->
-        <form action="">
-            <div class="label-input">
-                <label for="first name">First name: </label>
-                <input type="text" placeholder="First name" value="Diyan">
-            </div>
-            <br>
-            <div class="label-input">
-                <label for="last name">Last name: </label>
-                <input type="text" placeholder="Last name" value="Kalayadzhiev">
-            </div>
-            <br>
-            <div class="label-input">
-                <label for="username">Username: </label>
-                <input type="text" placeholder="Username" value="k_dido">
-            </div>
-            <br>
-            <div class="label-input">
-                <label for="email">Email: </label>
-                <input type="email" placeholder="Email" value="d.denov@gmail.com">
-            </div>
-            <br>
-            <div class="label-input">
-                <label for="image">Image: </label>
-                <input type="text" placeholder="Link to to profile picture"
-                       value="https://i.natgeofe.com/n/de94c416-6d23-45f5-9708-e8d56289268e/naturepl_01132178.jpg?w=636&h=631">
-            </div>
-            <br>
 
-            <div class="label-input">
-                <label for="image">Gender: </label>
-                <div class="list-choice">
-                    <div class="list-choice-title">Gender</div>
-                    <div class="list-choice-objects">
-                        <label>
-                            <input type="radio" name="gender"/> <span>Male</span>
-                        </label>
-                        <label>
-                            <input type="radio" name="gender"/> <span>Female</span>
-                        </label>
-                        <label>
-                            <input type="radio" name="gender"/> <span>Do not show</span>
-                        </label>
-                    </div>
-                </div>
+        <form method="post" action="{% url 'edit_user' pk=object.pk %}" enctype="multipart/form-data">
+            <div style="margin-bottom: 5px" class="label-input">
+                 <label for="id_first_name">First name: </label>
+
+                {{ form.first_name | placeholder:'First Name' }}
+            </div>
+            <div style="margin: 5px 0px" class="label-input">
+                 <label for="first name"></label>
+                {{ form.first_name.errors }}
             </div>
 
-            <!-- Edit Profile Button -->
+
+            <div style="margin-bottom: 5px" class="label-input">
+                <label for="id_last_name">Last name: </label>
+                {{ form.last_name | placeholder:'Last Name' }}
+            </div>
+            <div style="margin: 5px 0px" class="label-input">
+                 <label for="last name"></label>
+                {{ form.last_name.errors }}
+            </div>
+
+            <div style="margin-bottom: 5px" class="label-input">
+                 <label for="id_email">Email: </label>
+                <input type="text" name="email" placeholder="Email" id="id_email" value="{{ object.email }}">
+            </div>
+            <div style="margin: 5px 0px" class="label-input">
+                 <label for="email"></label>
+                {{ form.email.errors }}
+            </div>
+
+            <div style="margin-bottom: 5px" class="label-input">
+                 <label for="id_profile_picture">Image: </label>
+                <input type="file" name="profile_picture" accept="image/*" id="id_profile_picture">
+            </div>
+            <div class="label-input">
+                <label for="id_gender">Gender: </label>
+                {{ form.gender | placeholder:'Gender' }}
+            </div>
+            {% csrf_token %}
+
+
             <button class="edit-btn" type="submit">Edit</button>
         </form>
-        <!-- End Edit Profile Form -->
+
 
     </div>
-    <!-- End Edit Profile Section -->
+
 {% endblock %}

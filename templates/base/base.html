@@ -2,29 +2,30 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<!-- Starts Head Section -->
+
 <head>
     <link rel="stylesheet"
-          href="{% static 'css/styles.css'%}" >
+          href="{% static 'css/styles.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static '/images/free-30-instagram-stories-icons23_122570.png' %}">
     <title>Petstagram</title>
 </head>
-<!-- End Head Section -->
 
-<!-- Starts Body Section -->
+
+
 <body>
 
-<!-- Starts Header Section with Navigation Bar -->
+
 <header>
     <nav class="navbar">
         <div class="container">
             <div class="logo">
-                <!-- Link to Home Page -->
-                <a href="#">
-                    <img width="50px" src="{% static "/images/free-30-instagram-stories-icons23_122570.png" %}" alt="img1">
+
+                <a href="{% url 'index' %}">
+                    <img width="50px" src="{% static "/images/free-30-instagram-stories-icons23_122570.png" %}"
+                         alt="img1">
                 </a>
 
-                <!-- Link to Home Page -->
+
                 <a class="home" href="{% url 'index' %}">
                     <i>Petstagram</i>
                 </a>
@@ -32,63 +33,71 @@
 
             <div class="nav-links">
                 <ul class="nav-group">
-                    <li class="nav-item">
 
-                        <!-- Link to Add Pet Page -->
-                        <a href="{% url 'add_pet' %}">
-                            <i>Add Pet</i>
-                        </a>
-                    </li>
-                    <li class="nav-item">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
 
-                        <!-- Link to Add Photo Page -->
-                        <a href="{% url 'add_photo' %}">
-                            <i>Add Photo</i>
-                        </a>
-                    </li>
-                    <li class="nav-item">
 
-                        <!-- Link to Login Page -->
-                        <a href="{% url 'login_user' %}">
-                            <i>Login</i>
-                        </a>
-                    </li>
-                    <li class="nav-item">
+                            <a href="{% url 'add_pet' %}">
+                                <i>Add Pet</i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
 
-                        <!-- Link to Register Page -->
-                        <a href="{% url 'register_user' %}">
-                            <i>Register</i>
-                        </a>
-                    </li>
-                    <li class="nav-item">
 
-                        <!-- Link to Profile Page -->
-                        <a href="{% url 'detail_user' pk=1 %}">
-                            <i>Profile</i>
-                        </a>
-                    </li>
+                            <a href="{% url 'add_photo' %}">
+                                <i>Add Photo</i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+
+                            <a href="{% url 'detail_user' user.pk %}">
+                                <i>Profile</i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+
+
+                            <a href="{% url 'logout_user' %}">
+                                <i>Log Out</i>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+
+
+                            <a href="{% url 'login_user' %}">
+                                <i>Login</i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+
+
+                            <a href="{% url 'register_user' %}">
+                                <i>Register</i>
+                            </a>
+                        </li>
+                    {% endif %}
+
+
                 </ul>
             </div>
         </div>
     </nav>
 </header>
-<!-- End Header Section with Navigation Bar -->
 
-<!-- Starts Main Section -->
 <main>
     {% block main %}
 
     {% endblock %}
 </main>
-<!-- End Main Section -->
 
-<!-- Start Footer Section -->
 <div class="footer">
 		<span class="footer-section">
 			© 2022 SOFTUNI WORKSHOP FOR PYTHON WEB MODULE
 		</span>
 </div>
-<!-- End Footer Section -->
+
 
 </body>
 </html>
