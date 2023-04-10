@@ -36,6 +36,8 @@ class DetailPet(IsOwnerMixin, views.DetailView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        data['photos'] = self.object.photo_set.all()
+        data['photo_count'] = self.object.photo_set.count()
         data['is_owner'] = self.is_owner()
         data['form'] = CommentForm()
         return data

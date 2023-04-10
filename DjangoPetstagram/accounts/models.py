@@ -64,7 +64,6 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
                 gender=GenderEnum.DoNotShow.value
             )
             profile.save()
-        return super().save(*args, **kwargs)
 
 
 class UserProfile(models.Model):

@@ -29,7 +29,6 @@ class Index(views.ListView):
 
         data['photos'] = photos
         data['form'] = CommentForm()
-        data['comment'] = PhotoComment.objects.first()
         data['search_form'] = search_form
 
         return data

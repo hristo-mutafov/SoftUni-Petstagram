@@ -1,25 +1,17 @@
+import os
 from pathlib import Path
 
 from django.urls import reverse_lazy
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-h1jvphd!e54nfg_n%mr-tft6jjm_#xt*vdmp%4doh9vgzt(&$s'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    # 'localhost',
-    # '127.0.0.1'
-]
+ALLOWED_HOSTS = []
 
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -34,6 +26,7 @@ INSTALLED_APPS = [
     'DjangoPetstagram.pets',
     'DjangoPetstagram.photos'
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -66,23 +59,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'DjangoPetstagram.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Petstagram',
-        'USER': 'postgres',
-        'PASSWORD': 'icakagicaka',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'ENGINE': os.environ.get('DB_ENGINE'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
 if DEBUG:
     AUTH_PASSWORD_VALIDATORS = []

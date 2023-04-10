@@ -44,6 +44,7 @@ class DetailsUser(LoginRequiredMixin, views.DetailView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
 
+        data['is_owner'] = self.object.pk == self.request.user.pk
         data['pets'] = self.object.pet_set.all()
         data['profile'] = self.object.userprofile
         data['photos'] = self.object.photo_set.prefetch_related('photolike_set')
