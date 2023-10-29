@@ -1,6 +1,6 @@
 # Project Setup
 
-For running this project locally, you should have Python and Pip installed.
+For running this project locally, you should have Python, Pip and Docker installed.
 
 ## Setup Steps
 
